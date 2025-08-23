@@ -1,0 +1,35 @@
+pre.json-stringify {
+    background-color: #000000;
+    color: #00ff00;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    line-height: 1.4em;
+    user-select: text;
+}
+
+.json-key {
+    color: #33cc33;
+    font-weight: bold;
+}
+
+.json-string {
+    color: #66ff66;
+}
+
+.json-number {
+    color: #99ff99;
+}
+
+.json-boolean {
+    color: #99ff99;
+    font-style: italic;
+}
+
+.json-null {
+    color: #666666;
+    font-style: italic;
+}
