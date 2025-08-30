@@ -13,6 +13,10 @@ import base64
 def home():
     return render_template('upload.html', title='Equisd')
 
+@app.route("/dashboard")
+def dashboard():
+    return render_template('dashboard.html', title='Equisd')
+
 @app.route("/process", methods=['POST'])
 def process():
     # include code to process the image using sdk inference of roboflow
@@ -33,7 +37,7 @@ def process():
     with tempfile.NamedTemporaryFile(delete=True) as tmp:
         tmp.write(image_bytes)
         tmp.flush()
-        result = CLIENT.infer(tmp.name, model_id="rock-paper-scissors-sxsw/14") # <<<< Cambiar
+        result = CLIENT.infer(tmp.name, model_id="people-2-kftoi/1") # <<<< Cambiar
 
     # Cargar la imagen original
     img = Image.open(io.BytesIO(image_bytes))
