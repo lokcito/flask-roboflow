@@ -5,6 +5,7 @@ import cv2
 import numpy as np
 from flask import Flask, render_template, request, jsonify
 import tempfile
+import os
 
 app = Flask(__name__)
 import base64
@@ -15,7 +16,9 @@ def home():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template('dashboard.html', title='Equisd')
+    instantdb_app_id = os.getenv("INSTANTDB_APP_ID", "xxxx")
+    return render_template('dashboard.html', title='Equisd', 
+        instantdb_app_id=instantdb_app_id)
 
 @app.route("/process", methods=['POST'])
 def process():
@@ -24,7 +27,7 @@ def process():
 
     CLIENT = InferenceHTTPClient(
         api_url="https://serverless.roboflow.com",
-        api_key="xxxx" # <<<< Cambiar
+        api_key=os.getenv("ROBOFLOW_API_KEY", "xxxx") # <<<< Cambiar
     )
 
     # Get image from the request
