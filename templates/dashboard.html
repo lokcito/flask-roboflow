@@ -106,6 +106,16 @@
                     </div>
                 </div>
             </div>
+            <div style="width: 40%">
+                <div class="card w-100">
+                    <div class="card-header">
+                        Grafica
+                    </div>
+                    <div class="card-body">
+                        <div style="height: 400px;" id="histoDraw">xxxxxx</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row">
@@ -135,107 +145,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://malsup.github.io/jquery.blockUI.js"></script>
-    
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/1.33.1/plotly.min.js"></script>
     <script>
-        const { init, id } = window.instant;
-
-        var qtyValid = 0;
-        var qtyInvalid = 0;
-        var globalDB = null;
-        function syntaxHighlight(json) {
-            if (typeof json !== 'string') {
-                json = JSON.stringify(json, undefined, 2);
-            }
-            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(?:\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-                let cls = 'number';
-                if (/^"/.test(match)) {
-                    if (/:$/.test(match)) {
-                        cls = 'key';
-                    } else {
-                        cls = 'string';
-                    }
-                } else if (/true|false/.test(match)) {
-                    cls = 'boolean';
-                } else if (/null/.test(match)) {
-                    cls = 'null';
-                }
-                return `<span class="json-${cls}">${match}</span>`;
-            });
-        }
-
-        $(document).ready(function () {
-            initDB();
-            
-            $('#imageFile').change(function () {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function (e) {
-                        $('#imagePreview').attr('src', e.target.result).show();
-                        $('#noPreviewText').hide();
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    $('#imagePreview').attr('src', '').hide();
-                    $('#noPreviewText').show();
-                }
-            });
-
-            $('#uploadForm').submit(function (event) {
-                event.preventDefault();
-
-                $('#card-upload-image').block({ message: "Cargando..." });
-                $('#spinner-analisis').show();
-                $('#card-result-analisis').hide();
-
-                var formData = new FormData(this);
-
-                $.ajax({
-                    url: '/process', // Replace with your Flask upload route
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        $('#card-upload-image').unblock();
-                        $('#spinner-analisis').hide();
-                        $('#card-result-analisis').show();
-                        // You can handle the response from the server here
-                        $('#imageProcessed').attr('src', 'data:image/png;base64,' + response.image).show();
-                        document.getElementById('processedText').innerHTML = syntaxHighlight(response.json);
-
-                        counts(response.json);
-
-                    },
-                    error: function (error) {
-                        alert('Error uploading image.');
-                        console.error(error);
-                    }
-                });
-            });
-
-            function counts(json) {
-                for (var i = 0; i < json.predictions.length; i++) {
-                    qtyValid++;
-                }
-                globalDB.transact(globalDB.tx.predictions[id()].create({ 
-                    qtyValid: qtyValid,
-                    qtyInvalid: qtyInvalid,
-                    predictions: json.predictions
-                }));
-                
-                $('#qtyValidText').text(qtyValid);
-            }
-        });
-
-        async function initDB() {
-            globalDB = await init({ appId: "{{ instantdb_app_id }}" });
-        }
-
+        var instantdb_app_id = "{{ instantdb_app_id }}";
     </script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 </body>
 
 </html>
