@@ -13,6 +13,7 @@ RUN apt-get update -y && \
 COPY . .
 
 RUN pip install --no-cache-dir flask inference-sdk gunicorn numpy opencv-python
+RUN pip install --no-cache-dir flask-cors
 
 EXPOSE 5000
 

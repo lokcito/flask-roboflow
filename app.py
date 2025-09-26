@@ -6,9 +6,12 @@ import numpy as np
 from flask import Flask, render_template, request, jsonify
 import tempfile
 import os
+from flask_cors import CORS
 
 app = Flask(__name__)
 import base64
+
+CORS(app)
 
 @app.route("/")
 def home():
